@@ -1,0 +1,206 @@
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #EEF0E5;
+        text-align: center;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        font-family: cursive;
+        font-weight: bold;
+    }
+
+    form {
+        text-align: center;
+        max-width: 50vw;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #FBF6EE;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="file"] {
+        color: black;
+        background-color: transparent;
+        border: 2px solid black;
+        padding: 10px 15px;
+        font-weight: 900;
+        font-family: monospace;
+        width: 80%;
+        font-size: 16px;
+
+        margin: 3% 10%;
+
+    }
+
+    input::file-selector-button {
+        color: black;
+        border: 2px solid black;
+        padding: 5px 10px;
+
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 900;
+        font-family: monospace;
+    }
+
+    input::file-selector-button:hover {
+        background-color: #7BD3EA;
+        border: 2px solid #7BD3EA;
+
+    }
+
+
+    button{
+        color: black;
+        background-color: transparent;
+        border: 2px solid black;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 900;
+        font-family: monospace;
+    }
+
+    button:hover,.back-button:hover {
+        background-color: #7BD3EA;
+        border: 2px solid #7BD3EA;
+
+    }
+    .back-button{
+        position: absolute;
+        top: 1vh;
+        right: 1vw;
+        text-decoration: none;
+        color: black;
+        background-color: transparent;
+        border: 2px solid black;
+        font-weight: 900;
+        margin: 5vh auto;
+        padding: 10px 15px;
+        text-align: center;
+    }
+
+
+    /* Result.html */
+
+    .table-cnt {
+
+        width: 70vw;
+        max-height: 60vh !important;
+        overflow-y: auto !important;
+        padding: 2vh 2vw;
+        margin: 10px auto;
+    }
+
+    table {
+        box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.1);
+        border-collapse: collapse;
+        margin: 0;
+        width: 100%;
+    }
+    th,
+    td {
+        padding: 10px;
+        text-align: center;
+    }
+    td:nth-child(2) {
+        text-align: left;
+    }
+
+    td:last-child {
+        width: 20%;
+    }
+    th {
+        background:#000;
+        color: #ddd;
+    }
+    tr:nth-of-type(odd){
+        background-color: #EEEEEE;
+        color: black;
+        border-bottom: 2px solid black;
+
+    }
+    tr:nth-of-type(even){
+        background-color: white;
+        color: black;
+        border-bottom: 2px solid black;
+    }
+ 
+   
+    
+    #amountFilter {
+        margin-bottom: 10px;
+    }
+
+  
+    #summary {
+        text-align: center;
+        border-radius: 10px;
+        background-color: transparent;
+        border: 3px solid black;
+        color: black;
+        width: 30vw;
+        margin: 10px auto;
+        padding: 10px 15px;
+    }
+    
+    #income,
+    #expense {
+        display: inline-block;
+        margin: 0 10px;
+        font-size: larger;
+        font-weight: bolder;
+
+    }
+
+    #filter_chart{
+        width: 30vw;
+        margin: 10px auto;
+        padding: 5px 10px ;
+        font-weight: 900;
+        font-family: cursive;
+        
+    }
+    #amountFilter {
+        background-color: rgba(123, 212, 234, 0.4);
+        font-family: 'Open Sans', 'Helvetica Neue', 'Segoe UI', 'Calibri', 'Arial', sans-serif;
+        font-size: medium;
+        color: #4d4e50;
+        outline: none;
+    padding: 8px;
+    border: 2px solid #4d4e50;
+    font-weight: 900;
+    text-align: center;
+    border-radius: 10px;
+    margin: 10px auto;
+    width:100%;
+    }
+
+    #amountFilter option{
+        font-weight: bold;
+
+    }
+    
+    
+    
+    #expensesChart {
+        margin: 10px auto;
+        background-color: whitesmoke;
+        box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    }
+    
+
+
+
+select:focus {
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}

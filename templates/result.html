@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyExpenseTracker</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <h1>My Expense Tracker</h1>
+
+    <a href="{{ url_for('index') }}" class="back-button">Back</a>
+    <div id="summary">
+        <p id="income">Income: </p>
+        <p id="expense">Expense: </p>
+    </div>
+    <div class="table-cnt">
+        <table id="expenseTable">
+            <tr>
+                <th>Serial Number</th>
+                <th>Beneficiary</th>
+                <th>Amount</th>
+                <th>Dates</th>
+            </tr>
+        </table>
+    </div>
+    <div id ="filter_chart">
+    <label for="amountFilter">Filter by Amount:</label>
+    <select id="amountFilter">
+        <option value="all">All</option>
+        <option value="500">Less than 500</option>
+        <option value="1500">Between 500 and 1500</option>
+        <option value="2500">Between 1500 and 2500</option>
+        <option value="4000">Between 2500 and 4000</option>
+        <option value="4001">Greater than 4000</option>
+    </select>
+</div>
+
+
+
+<div id="chartCanvas">
+    <canvas id="expensesChart" style="height:90vh;width:95vw"></canvas>
+</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var selectElement = document.getElementById('amountFilter');
+        
+            selectElement.addEventListener('change', function () {
+                var selectedOption = this.options[this.selectedIndex];
+                var bgColor = getBackgroundColor(selectedOption.value);
+                this.style.backgroundColor = bgColor;
+            });
+        
+            function getBackgroundColor(value) {
+                switch (value) {
+                    case 'all':
+                        return 'rgba(123, 212, 234, 0.4)'; 
+                    case '500':
+                        return 'rgba(0, 255, 0, 0.2)'; 
+                    case '1500':
+                        return 'rgba(255, 255, 0, 0.2)'; 
+                    case '2500':
+                        return 'rgba(255, 165, 0, 0.4)'; 
+                    case '4000':
+                        return 'rgba(255, 0, 0, 0.4)'; 
+                    case '4001':
+                        return 'rgba(139, 0, 0, 0.4)'; 
+                    default:
+                        return 'rgba(123, 212, 234, 0.4)'; 
+                }
+            }
+        });
+        
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/get_data/{{filename}}')
+                .then(response => response.json())
+                .then(data => {
+                    // Update the summary
+                    document.getElementById("income").innerText += ' ' + data.income.toFixed(0);
+                    document.getElementById("expense").innerText += ' ' + data.expense.toFixed(0);
+
+                    // Populate the expense table
+                    var expenseTable = document.getElementById("expenseTable");
+                    for (var i = 0; i < data.expenses_by_category.length; i++) {
+                        var row = expenseTable.insertRow();
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        var cell3 = row.insertCell(2);
+                        var cell4 = row.insertCell(3);
+
+                        cell1.innerText = data.expenses_by_category[i].SerialNumber;
+                        cell2.innerText = data.expenses_by_category[i]['Beneficiary name'];
+                        cell3.innerText = data.expenses_by_category[i].Amount.toFixed(2);
+
+                        // Extract dates directly from the 'Date and Time' field
+                        var dates = data.expenses_by_category[i]['Date and Time'];
+                        cell4.innerText = Array.isArray(dates) ? dates.join(', ') : '';
+                    }
+
+                    // Create and update the bar chart
+                    var ctx = document.getElementById('expensesChart').getContext('2d');
+                    var expensesChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.expenses_by_category.map(entry => entry['Beneficiary name']),
+                            datasets: [{
+                                label: 'Amount',
+                                data: data.expenses_by_category.map(entry => entry.Amount.toFixed(2)),
+                                backgroundColor: data.expenses_by_category.map(entry => {
+                                    var amount = entry.Amount.toFixed(2);
+                                    return amount < 500 ? 'rgba(0, 255, 0, 0.2)' :
+                                        amount < 1500 ? 'rgba(255, 255, 0, 0.2)' :
+                                            amount < 2500 ? 'rgba(255, 165, 0, 0.2)' :
+                                                amount < 4000 ? 'rgba(255, 0, 0, 0.2)' :
+                                                    'rgba(139, 0, 0, 0.2)';
+                                }),
+                                borderColor: data.expenses_by_category.map(entry => {
+                                    var amount = entry.Amount.toFixed(2);
+                                    if (amount < 500) {
+                                        return 'rgba(0, 255, 0, 1)';  // Green
+                                    } else if (amount < 1500) {
+                                        return 'rgba(255, 255, 0, 1)';  // Light Yellow
+                                    } else if (amount < 2500) {
+                                        return 'rgba(255, 165, 0, 1)';  // Dark Yellow
+                                    } else if (amount < 4000) {
+                                        return 'rgba(255, 0, 0, 1)';  // Light Red
+                                    } else {
+                                        return 'rgba(139, 0, 0, 1)';  // Dark Red
+                                    }
+                                }),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                    // Step 3: Add event listener to the dropdown
+                    document.getElementById('amountFilter').addEventListener('change', function () {
+                        // Get the selected value from the dropdown
+                        var selectedAmount = parseFloat(this.value);
+
+                        // Filter the data based on the selected amount
+                        var filteredData = data.expenses_by_category.filter(function (entry) {
+                            if (selectedAmount === 'all' || isNaN(selectedAmount)) {
+                                return true; // Show all data
+                            } else if (selectedAmount === 4001) {
+                                return entry.Amount >= 4000;
+                            } else if (selectedAmount === 4000) {
+                                return entry.Amount >= 2500 && entry.Amount < 4000;
+                            } else if (selectedAmount === 2500) {
+                                return entry.Amount >= 1500 && entry.Amount < 2500;
+                            } else if (selectedAmount === 1500) {
+                                return entry.Amount >= 500 && entry.Amount < 1500;
+                            } else if (selectedAmount === 500) {
+                                return entry.Amount < 500;
+                            } else {
+                                return entry.Amount <= selectedAmount;
+                            }
+                        });
+
+                        // Update the chart with the filtered data and set colors accordingly
+                        expensesChart.data.labels = filteredData.map(entry => entry['Beneficiary name']);
+                        expensesChart.data.datasets[0].data = filteredData.map(entry => entry.Amount.toFixed(2));
+                        expensesChart.data.datasets[0].backgroundColor = filteredData.map(entry => {
+                            var amount = entry.Amount.toFixed(2);
+                            return amount < 500 ? 'rgba(0, 255, 0, 0.2)' :
+                                amount < 1500 ? 'rgba(255, 255, 0, 0.2)' :
+                                    amount < 2500 ? 'rgba(255, 165, 0, 0.2)' :
+                                        amount < 4000 ? 'rgba(255, 0, 0, 0.2)' :
+                                            'rgba(139, 0, 0, 0.2)';
+                        });
+                        expensesChart.data.datasets[0].borderColor = filteredData.map(entry => {
+                            var amount = entry.Amount.toFixed(2);
+                            if (amount < 500) {
+                                return 'rgba(0, 255, 0, 1)';  // Green
+                            } else if (amount < 1500) {
+                                return 'rgba(255, 255, 0, 1)';  // Light Yellow
+                            } else if (amount < 2500) {
+                                return 'rgba(255, 165, 0, 1)';  // Dark Yellow
+                            } else if (amount < 4000) {
+                                return 'rgba(255, 0, 0, 1)';  // Light Red
+                            } else {
+                                return 'rgba(139, 0, 0, 1)';  // Dark Red
+                            }
+                        });
+                        expensesChart.update();
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+
+    </script>
+</body>
+
+</html>

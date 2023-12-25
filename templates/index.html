@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyExpenseTracker</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+    <h1>My Expense Tracker</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <h3>Upload CSV File</h3>
+        <input type="file" name="file" accept=".csv" required>
+        <button type="submit">Upload</button>
+    </form>
+
+</body>
+
+</html>
