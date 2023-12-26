@@ -8,6 +8,11 @@ import logging
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
+
+
+
+
+
 def file_exists(filename):
     return os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
@@ -84,9 +89,11 @@ def add_to_dynamic_mapping(dynamic_mapping, name1, name2):
     
     return dynamic_mapping
 
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    current_year = datetime.now().year
+    return render_template('index.html', current_year=current_year)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -109,7 +116,8 @@ def upload_file():
 
 @app.route('/<filename>')
 def process_file(filename):
-    return render_template('result.html', filename=filename)
+    current_year = datetime.now().year
+    return render_template('result.html', filename=filename,current_year=current_year)
 
 
 @app.route('/get_data/<filename>')

@@ -88,6 +88,44 @@
         text-align: center;
     }
 
+    .info {
+        max-width: 50vw;
+        margin: 50px auto;
+        padding:10px ;
+        background-color: #FBF6EE;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .info ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .info li {
+        margin-bottom: 10px;
+    }
+
+    .info ul li:before {
+        content: '\2022';
+        color: #3498db;
+        font-weight: bolder;
+        display: inline-block;
+        width: 1em;
+        margin-left: 1vw;
+    }
+
+    .info ul ul li:before {
+        content: '\2023';
+    }
+
+    .info ul ul {
+        margin-top: 10px;
+        margin-left: 20px;
+    }
+
 
     /* Result.html */
 
@@ -203,4 +241,20 @@
 
 select:focus {
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+/* Footer */
+
+
+footer {
+    text-align: center;
+    background-color: #333;
+    color: #838788;
+    padding: 10px;
+    margin-top: 10px;
+
+}
+
+footer a {
+    color: #ddd !important;
+    text-decoration: underline !important;
 }
